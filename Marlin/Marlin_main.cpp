@@ -12369,7 +12369,11 @@ inline void gcode_M950() {
 inline void gcode_M951() {
   if (LGT_is_printing_sdcard == false)
   {
+    print_job_timer.stop();
+    delay(100);
     runout.reset();
+    delay(100);
+    print_job_timer.start();
     menu_type = eMENU_PRINT_HOME;
     LGT_LCD.LGT_Printer_Data_Updata();
     status_type = PRINTER_PRINTING;
@@ -12377,6 +12381,7 @@ inline void gcode_M951() {
     LGT_LCD.LGT_Send_Data_To_Screen(ADDR_VAL_ICON_HIDE, 1);
     idle();
     LGT_LCD.LGT_Change_Page(ID_MENU_PRINT_HOME);
+    
   }
 }
 

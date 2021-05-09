@@ -1224,6 +1224,8 @@ void LGT_SCR::LGT_Analysis_DWIN_Screen_Cmd()
 #ifdef LK1_Pro
 					leveling_on = true;
 #endif
+          print_job_timer.stop();
+          delay(100);
 					card.getfilename(gcode_id[sel_fileid]);
 					card.openFile(card.filename,true);
 					card.startFileprint();
