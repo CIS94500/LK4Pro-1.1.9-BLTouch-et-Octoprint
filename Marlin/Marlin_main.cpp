@@ -5734,6 +5734,7 @@ void home_all_axes() { gcode_G28(true); }
     #ifdef LGT_MAC
       if (LGT_is_printing == false && menu_type == eMENU_LEVELING)
       {
+        relative_mode = false;
         enqueue_and_echo_commands_P(PSTR("M420 S1 Z10"));
         enqueue_and_echo_commands_P(PSTR("M500"));
         enqueue_and_echo_commands_P(PSTR("G1 X0 Y0 Z20 F4500"));
