@@ -772,6 +772,7 @@ XYZ_CONSTS_FROM_CONFIG(signed char, home_dir, HOME_DIR);
 	extern PRINTER_KILL_STATUS kill_type;
 //VSYS---------------------------------------------------------------------------------
 //  extern bool /*tartemp_flag,*/LGT_is_printing,LGT_stop_printing,leveling_wait,return_home;
+  extern void LGT_Printer_Total_Work_Time();
 	extern bool /*tartemp_flag,*/LGT_is_printing,LGT_is_printing_sdcard,LGT_stop_printing,leveling_wait,return_home,xyz_home,xy_home,z_home;
 //-------------------------------------------------------------------------------------
 	extern char menu_move_dis_chk,menu_fila_type_chk;
@@ -12358,11 +12359,13 @@ inline void gcode_M355() {
 inline void gcode_M950() {
   if (LGT_is_printing_sdcard == false)
   {
-    runout.reset();
     LGT_LCD.LGT_Change_Page(ID_MENU_HOME);
     status_type = PRINTER_STANDBY;
+    LGT_Printer_Total_Work_Time();
+    delay(100);
     LGT_LCD.LGT_Exit_Print_Page();
     LGT_is_printing = false;
+    runout.reset();
     delay(100);
     print_job_timer.stop();
   }
@@ -12382,15 +12385,16 @@ inline void gcode_M951() {
     LGT_LCD.LGT_Send_Data_To_Screen(ADDR_VAL_ICON_HIDE, 1);
     idle();
     LGT_LCD.LGT_Change_Page(ID_MENU_PRINT_HOME);
-    
   }
 }
 
 inline void gcode_M952() {
   if (LGT_is_printing_sdcard == false)
   {   
-    status_type = PRINTER_PRINTING_F;
     LGT_LCD.LGT_Change_Page(ID_DIALOG_PRINT_FINISH);
+    status_type = PRINTER_PRINTING_F;
+    LGT_Printer_Total_Work_Time();
+    delay(100);
     LGT_LCD.LGT_Exit_Print_Page();
     LGT_is_printing = false;
     runout.reset();

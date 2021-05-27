@@ -862,7 +862,7 @@
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
 //   Set to 3 or more for slow probes, averaging the results.
-#define MULTIPLE_PROBING 2
+#define MULTIPLE_PROBING 2 //VSYS
 
 
 /**
@@ -1114,7 +1114,7 @@
 
   // Set the number of grid points per dimension.
 #if ENABLED (LK1_Pro_AutoBed)||ENABLED(LK4_Pro_BLTOUCH)
-	#define GRID_MAX_POINTS_X 6
+	#define GRID_MAX_POINTS_X 6 //VSYS
 #else
 	//#define GRID_MAX_POINTS_X 3
 #endif

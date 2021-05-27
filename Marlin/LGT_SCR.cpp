@@ -580,21 +580,6 @@ void LGT_SCR::LGT_Get_MYSERIAL1_Cmd()
 }
 void LGT_SCR::LGT_Stop_Printing()
 {
-//VSYS--------------------------------------------------
-if (LGT_is_printing_sdcard == false)
-{
-    clear_command_queue();
-    enqueue_and_echo_commands_P(PSTR("M118 A1 action:cancel"));
-    quickstop_stepper();
-    delay(100);
-    print_job_timer.stop();
-    thermalManager.disable_all_heaters();
-  #if FAN_COUNT > 0
-      for (uint8_t i = 0; i < FAN_COUNT; i++) fanSpeeds[i] = 0;
-  #endif
-    wait_for_heatup = false;    
-} else {
-//------------------------------------------------------
 		card.stopSDPrint(
 #if SD_RESORT
 			true
@@ -617,9 +602,6 @@ if (LGT_is_printing_sdcard == false)
 			card.closeJobRecoveryFile();
 			job_recovery_commands_count = 0;
 	#endif
-//VSYS-------------------------------------------------- 
-}
-//------------------------------------------------------
 			enqueue_and_echo_commands_P(PSTR("G91"));
 			enqueue_and_echo_commands_P(PSTR("G1 Z10"));
 			enqueue_and_echo_commands_P(PSTR("G28 X0"));
@@ -1287,11 +1269,19 @@ void LGT_SCR::LGT_Analysis_DWIN_Screen_Cmd()
 				status_type = PRINTER_PRINTING;
 			break;
 		case eBT_PRINT_HOME_ABORT:
-				LGT_Change_Page(ID_DIALOG_PRINT_WAIT);
-				wait_for_heatup = false;
-				LGT_stop_printing = true;
-				LGT_Printer_Total_Work_Time();
-				LGT_Exit_Print_Page();
+//VSYS------------------------------------------
+//       card.startFileprint();  
+        if (LGT_is_printing_sdcard == true)
+        {
+          LGT_Change_Page(ID_DIALOG_PRINT_WAIT);
+          wait_for_heatup = false;
+          LGT_stop_printing = true;
+          LGT_Printer_Total_Work_Time();
+          LGT_Exit_Print_Page();
+        }else{
+          enqueue_and_echo_commands_P(PSTR("M118 A1 action:cancel"));
+        }
+//------------------------------------------------      
 			break;
 		case eBT_PRINT_HOME_FINISH:
 				runout.reset();
