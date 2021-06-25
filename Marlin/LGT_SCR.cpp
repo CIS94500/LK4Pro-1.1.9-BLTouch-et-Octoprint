@@ -1251,18 +1251,18 @@ void LGT_SCR::LGT_Analysis_DWIN_Screen_Cmd()
 		case eBT_PRINT_HOME_RESUME:
 				//wait_for_heatup = true;
 				LGT_Change_Page(ID_DIALOG_PRINT_WAIT);
-			    do_blocking_move_to_xy(resume_x_position,resume_y_position,50); 
-				planner.synchronize();	// wait move done
-				LGT_Change_Page(ID_MENU_PRINT_HOME);
 //VSYS------------------------------------------
 //       card.startFileprint();  
         if (LGT_is_printing_sdcard == true)
         {
           card.startFileprint();
+          do_blocking_move_to_xy(resume_x_position,resume_y_position,50); 
         }else{
           enqueue_and_echo_commands_P(PSTR("M118 A1 action:resume"));
         }
 //------------------------------------------------  
+        planner.synchronize();  // wait move done
+        LGT_Change_Page(ID_MENU_PRINT_HOME);
 				print_job_timer.start();
 		    runout.reset();
 				menu_type = eMENU_PRINT_HOME;
