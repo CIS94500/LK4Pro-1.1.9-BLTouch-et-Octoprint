@@ -1829,7 +1829,9 @@ void LGT_SCR::LGT_Analysis_DWIN_Screen_Cmd()
     
       LGT_Change_Page(ID_UTILITIES_WAIT);
       menu_type = eMENU_UTILI_Z_OFFSET;
-            
+      
+      zprobe_zoffset = 0;
+       
       clear_command_queue();
       enqueue_and_echo_commands_P(PSTR("G28"));
       enqueue_and_echo_commands_P(PSTR("G90"));
@@ -1845,7 +1847,8 @@ void LGT_SCR::LGT_Analysis_DWIN_Screen_Cmd()
         enqueue_and_echo_commands_P(PSTR("G0 X0 Y0 F3000"));
         enqueue_and_echo_commands_P(PSTR("M211 S1"));
         enqueue_and_echo_commands_P(PSTR("M84")); 
-
+        enqueue_and_echo_commands_P(PSTR("M501"));
+        
         LGT_Change_Page(ID_MENU_UTILITIES);
         menu_type = eMENU_IDLE;
       }else{

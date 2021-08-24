@@ -4317,8 +4317,10 @@ inline void gcode_G4() {
 inline void gcode_G28(const bool always_home_all) {
 
 #ifdef LGT_MAC
-	if (LGT_is_printing == false&& menu_type == eMENU_MOVE)
+	if (LGT_is_printing == false && menu_type == eMENU_MOVE)
+ {
 		LGT_LCD.LGT_Change_Page(ID_DIALOG_MOVE_WAIT);
+ }
 #endif // LGT_MAC
 
   #if ENABLED(DEBUG_LEVELING_FEATURE)
@@ -13019,10 +13021,9 @@ void process_parsed_command() {
       #endif
 
       case 28: gcode_G28(false);
-		#if ENABLED(LK1_Pro_AutoBed)||ENABLED(LK4_Pro_BLTOUCH)
-		//#ifdef LK1_Pro_AutoBed
-			set_bed_leveling_enabled(true);
-		#endif
+  		#if ENABLED(LK1_Pro_AutoBed)|| ENABLED(LK4_Pro_BLTOUCH)
+        set_bed_leveling_enabled(true);
+  		#endif
 		  break;                           // G28: Home one or more axes
 
       #if HAS_LEVELING
