@@ -1757,17 +1757,17 @@ void LGT_SCR::LGT_Analysis_DWIN_Screen_Cmd()
     break;
     
     case eBT_Z_OFFSET1_PLUS:
-      zprobe_zoffset = zprobe_zoffset + 0.05; //0047
+      zprobe_zoffset = zprobe_zoffset + 0.02; //0047
       if (menu_type == eMENU_UTILI_Z_OFFSET){
-        current_position[Z_AXIS] = current_position[Z_AXIS] + 0.05;
+        current_position[Z_AXIS] = current_position[Z_AXIS] + 0.02;
         LGT_Line_To_Current(Z_AXIS); 
       }
     break;
     
     case eBT_Z_OFFSET1_MINUS:
-      zprobe_zoffset = zprobe_zoffset - 0.05; //0048
+      zprobe_zoffset = zprobe_zoffset - 0.02; //0048
       if (menu_type == eMENU_UTILI_Z_OFFSET){
-        current_position[Z_AXIS] = current_position[Z_AXIS] - 0.05;
+        current_position[Z_AXIS] = current_position[Z_AXIS] - 0.02;
         LGT_Line_To_Current(Z_AXIS); 
       }
     break;
