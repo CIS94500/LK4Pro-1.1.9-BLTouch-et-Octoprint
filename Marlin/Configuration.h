@@ -107,33 +107,37 @@
 #define serial_port1
 	#ifdef serial_port1
 		#define LGT_MAC	
-		#ifdef LGT_MAC
-			
-        // uncomment or comment LKx_Pro definition to change model
-        // NOTE: shold only define one single model in the meantime
-			  // #define LK1_Pro
-        #define LK4_Pro
-        // #define LK5_Pro
-
-        // validation model definition
-        #if defined(LK1_Pro) && !defined(LK4_Pro) && !defined(LK5_Pro)
-        #elif !defined(LK1_Pro) && defined(LK4_Pro) && !defined(LK5_Pro)
-        #elif !defined(LK1_Pro) && !defined(LK4_Pro) && defined(LK5_Pro)
-        #elif !defined(LK1_Pro) && !defined(LK4_Pro) && !defined(LK5_Pro)
-          #error "Not define any one printer model"
-        #else
-          #error "Defined mutiple printer model at the same time"
-        #endif
-
-				#ifdef LK1_Pro
-					#define LK1_Pro_AutoBed
-				#else
-          #define LK4_Pro_BLTOUCH
-        #ifdef LK5_Pro
+  		#ifdef LGT_MAC
+  			
+          // uncomment or comment LKx_Pro definition to change model
+          // NOTE: shold only define one single model in the meantime
+  			  // #define LK1_Pro
           #define LK4_Pro
-        #endif
-				#endif
+          // #define LK5_Pro
 
+          //#define MUSCLE_V2 //VSYS bowden configuration https://www.thingiverse.com/thing:4881453
+          //#define Extruder_BMG //VSYS
+           
+          // validation model definition
+          #if defined(LK1_Pro) && !defined(LK4_Pro) && !defined(LK5_Pro)
+          #elif !defined(LK1_Pro) && defined(LK4_Pro) && !defined(LK5_Pro)
+          #elif !defined(LK1_Pro) && !defined(LK4_Pro) && defined(LK5_Pro)
+          #elif !defined(LK1_Pro) && !defined(LK4_Pro) && !defined(LK5_Pro)
+            #error "Not define any one printer model"
+          #else
+            #error "Defined mutiple printer model at the same time"
+          #endif
+  
+  				#ifdef LK1_Pro
+  					#define LK1_Pro_AutoBed
+  				#else
+            #define LK4_Pro_BLTOUCH
+          #ifdef LK5_Pro
+            #define LK4_Pro
+            #define LK4_Pro_BLTOUCH
+          #endif
+          
+  		#endif
 		#endif // LGT_MAC	
 	#endif // serial_port1
 /**
@@ -662,8 +666,11 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 92.599 }
-
+#ifdef Extruder_BMG //VSYS
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 411.35 }
+#else
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 99.57 }
+#endif
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
@@ -842,9 +849,14 @@
 	#define Y_PROBE_OFFSET_FROM_EXTRUDER -5//0 // Y offset: -front +behind [the nozzle]
 	#define Z_PROBE_OFFSET_FROM_EXTRUDER 0 //0  // Z offset: -below +above  [the nozzle]
 #elif ENABLED(LK4_Pro_BLTOUCH) 
-	#define X_PROBE_OFFSET_FROM_EXTRUDER -31 // X offset: -left  +right  [of the nozzle]
-	#define Y_PROBE_OFFSET_FROM_EXTRUDER -5 // Y offset: -front +behind [the nozzle]
-	#define Z_PROBE_OFFSET_FROM_EXTRUDER 0 // Z offset: -below +above  [the nozzle]
+  #ifdef MUSCLE_V2 //VSYS
+      #define X_PROBE_OFFSET_FROM_EXTRUDER -50 // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER -20 // Y offset: -front +behind [the nozzle]
+  #else
+      #define X_PROBE_OFFSET_FROM_EXTRUDER -31 // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER -5 // Y offset: -front +behind [the nozzle]
+  #endif
+	#define Z_PROBE_OFFSET_FROM_EXTRUDER 0 // Z offset: -below +above  [the nozzle] 
 #endif // LK1_Pro_AutoBed
 
 // Certain types of probes need to stay away from edges
@@ -862,7 +874,7 @@
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
 //   Set to 3 or more for slow probes, averaging the results.
-#define MULTIPLE_PROBING 2 //VSYS
+//#define MULTIPLE_PROBING 2 //VSYS
 
 
 /**
@@ -1065,7 +1077,7 @@
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
-#if ENABLED (LK1_Pro_AutoBed)||ENABLED(LK4_Pro_BLTOUCH)
+#if ENABLED (LK1_Pro_AutoBed)|| ENABLED(LK4_Pro_BLTOUCH)
 	#define AUTO_BED_LEVELING_BILINEAR
 #endif
 //#define AUTO_BED_LEVELING_BILINEAR
@@ -1113,8 +1125,8 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-#if ENABLED (LK1_Pro_AutoBed)||ENABLED(LK4_Pro_BLTOUCH)
-	#define GRID_MAX_POINTS_X 6 //VSYS
+#if ENABLED (LK1_Pro_AutoBed)|| ENABLED(LK4_Pro_BLTOUCH)
+	#define GRID_MAX_POINTS_X 8 //VSYS
 #else
 	//#define GRID_MAX_POINTS_X 3
 #endif
@@ -1135,7 +1147,13 @@
   #define LEFT_PROBE_BED_POSITION  MIN_PROBE_EDGE
   #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER)
   #define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE
-  #define BACK_PROBE_BED_POSITION  (Y_BED_SIZE - MIN_PROBE_EDGE)
+
+  #ifdef MUSCLE_V2 //VSYS
+    #define BACK_PROBE_BED_POSITION  ((Y_BED_SIZE - 10) + Y_PROBE_OFFSET_FROM_EXTRUDER)
+  #else
+    #define BACK_PROBE_BED_POSITION  (Y_BED_SIZE - MIN_PROBE_EDGE)
+  #endif
+  
 #endif // LK4_Pro_BLTOUCH
 
   // Probe along the Y axis, advancing X after each column
@@ -1250,7 +1268,7 @@
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
 //
-#if ENABLED (LK1_Pro_AutoBed)||ENABLED(LK4_Pro_BLTOUCH)
+#if ENABLED (LK1_Pro_AutoBed)|| ENABLED(LK4_Pro_BLTOUCH)
 	#define Z_SAFE_HOMING
 #else
 	//#define Z_SAFE_HOMING
